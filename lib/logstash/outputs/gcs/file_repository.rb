@@ -8,7 +8,7 @@ ConcurrentHashMap = java.util.concurrent.ConcurrentHashMap
 
 module LogStash
   module Outputs
-    class S3
+    class GCS
       class FileRepository
         DEFAULT_STATE_SWEEPER_INTERVAL_SECS = 60
         DEFAULT_STALE_TIME_SECS = 15 * 60
@@ -104,7 +104,7 @@ module LogStash
 
         def start_stale_sweeper
           @stale_sweeper = Concurrent::TimerTask.new(:execution_interval => @sweeper_interval) do
-            LogStash::Util.set_thread_name("S3, Stale factory sweeper")
+            LogStash::Util.set_thread_name("GCP, Stale factory sweeper")
 
             @prefixed_factories.forEach{|k,v| remove_stale(k,v)}
           end

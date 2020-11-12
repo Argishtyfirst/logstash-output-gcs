@@ -1,11 +1,12 @@
 # encoding: utf-8
+# ---validated for gcs---
 require "thread"
 require "forwardable"
 require "fileutils"
 
 module LogStash
   module Outputs
-    class S3
+    class GCS
       # Wrap the actual file descriptor into an utility classe
       # It make it more OOP and easier to reason with the paths.
       class TemporaryFile

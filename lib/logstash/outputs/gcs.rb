@@ -1,7 +1,6 @@
 # encoding: utf-8
 require "logstash/outputs/base"
 require "logstash/namespace"
-require "logstash/plugin_mixins/aws_config"
 require "stud/temporary"
 require "stud/task"
 require "concurrent"
@@ -11,10 +10,9 @@ require "tmpdir"
 require "fileutils"
 require "set"
 require "pathname"
-require "aws-sdk"
-require "logstash/outputs/s3/patch"
+# require "aws-sdk"
+# require "logstash/outputs/s3/patch"
 
-Aws.eager_autoload!
 
 # INFORMATION:
 #
@@ -75,19 +73,19 @@ Aws.eager_autoload!
 #      canned_acl => "private"                  (optional. Options are "private", "public-read", "public-read-write", "authenticated-read", "aws-exec-read", "bucket-owner-read", "bucket-owner-full-control", "log-delivery-write". Defaults to "private" )
 #    }
 #
-class LogStash::Outputs::S3 < LogStash::Outputs::Base
-  require "logstash/outputs/s3/writable_directory_validator"
-  require "logstash/outputs/s3/path_validator"
-  require "logstash/outputs/s3/write_bucket_permission_validator"
-  require "logstash/outputs/s3/size_rotation_policy"
-  require "logstash/outputs/s3/time_rotation_policy"
-  require "logstash/outputs/s3/size_and_time_rotation_policy"
-  require "logstash/outputs/s3/temporary_file"
-  require "logstash/outputs/s3/temporary_file_factory"
-  require "logstash/outputs/s3/uploader"
-  require "logstash/outputs/s3/file_repository"
+class LogStash::Outputs::GCS < LogStash::Outputs::Base
+  require "logstash/outputs/gcs/writable_directory_validator"
+  require "logstash/outputs/gcs/path_validator"
+  require "logstash/outputs/gcs/write_bucket_permission_validator"
+  require "logstash/outputs/gcs/size_rotation_policy"
+  require "logstash/outputs/gcs/time_rotation_policy"
+  require "logstash/outputs/gcs/size_and_time_rotation_policy"
+  require "logstash/outputs/gcs/temporary_file"
+  require "logstash/outputs/gcs/temporary_file_factory"
+  require "logstash/outputs/gcs/uploader"
+  require "logstash/outputs/gcs/file_repository"
 
-  include LogStash::PluginMixins::AwsConfig::V2
+  # include LogStash::PluginMixins::AwsConfig::V2
 
   PREFIX_KEY_NORMALIZE_CHARACTER = "_"
   PERIODIC_CHECK_INTERVAL_IN_SECONDS = 15
@@ -98,7 +96,7 @@ class LogStash::Outputs::S3 < LogStash::Outputs::Base
                                                                  })
 
 
-  config_name "s3"
+  config_name "gcs"
   default :codec, "line"
 
   concurrency :shared

@@ -1,10 +1,23 @@
 # encoding: utf-8
 require "logstash/util"
-require "aws-sdk"
+
+require 'thread'
+require 'java'
+require 'logstash-output-google_cloud_storage_jars.rb'
+
+java_import 'com.google.api.gax.rpc.FixedHeaderProvider'
+java_import 'com.google.api.gax.retrying.RetrySettings'
+java_import 'com.google.auth.oauth2.GoogleCredentials'
+java_import 'com.google.cloud.storage.BlobInfo'
+java_import 'com.google.cloud.storage.StorageOptions'
+java_import 'java.io.FileInputStream'
+java_import 'org.threeten.bp.Duration'
+
+
 
 module LogStash
   module Outputs
-    class S3
+    class GCS
       class Uploader
 
         DEFAULT_THREADPOOL = Concurrent::ThreadPoolExecutor.new({
@@ -26,7 +39,7 @@ module LogStash
 
         def upload_async(file, options = {})
           @workers_pool.post do
-            LogStash::Util.set_thread_name("S3 output uploader, file: #{file.path}")
+            LogStash::Util.set_thread_name("GCS output uploader, file: #{file.path}")
             upload(file, options)
           end
         end

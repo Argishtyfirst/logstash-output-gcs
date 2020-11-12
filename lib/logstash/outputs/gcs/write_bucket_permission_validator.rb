@@ -1,11 +1,13 @@
 # encoding: utf-8
+# --- NOT validated for gcs---
+
 require "stud/temporary"
 require "socket"
 require "fileutils"
 
 module LogStash
   module Outputs
-    class S3
+    class GCS
       class WriteBucketPermissionValidator
         attr_reader :logger
 
